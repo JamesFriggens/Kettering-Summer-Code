@@ -19,6 +19,7 @@ import frc.robot.subsystems.AuxSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.TimeDriveCommand;
@@ -54,10 +55,26 @@ public class RobotContainer {
 
   private SendableChooser<Command> autonSelector = new SendableChooser<>();
 
+  private double TimeDriveLeftSpeed = 0.5;
+  private double TimeDriveRightSpeed = 0.5;
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    autonSelector.addOption("Timed Drive Command", new TimeDriveCommand(m_driveSubsystem, 2.5, 0.5, 0.5));
+    autonSelector.addOption("Timed Drive Command",
+    new SequentialCommandGroup(
+    new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+    new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2) )));
+
+    autonSelector.addOption("Rotate Drive Command",
+    new SequentialCommandGroup(
+    new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+    new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
+    
+    new TimeDriveCommand(m_driveSubsystem, 2, 0.25, -0.25),
+
+    new TimeDriveCommand(m_driveSubsystem, 1.75, -TimeDriveLeftSpeed, -TimeDriveRightSpeed),
+    new TimeDriveCommand(m_driveSubsystem, .1, (TimeDriveLeftSpeed/2), (TimeDriveLeftSpeed/2))));
 
     SmartDashboard.putData("Auton Selector", autonSelector);
 
