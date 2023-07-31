@@ -63,7 +63,7 @@ public class RobotContainer {
 
     autonSelector.addOption("Timed Drive Command",
     new SequentialCommandGroup(
-    new TimeDriveCommand(m_driveSubsystem, 1, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+    new TimeDriveCommand(m_driveSubsystem, 3, TimeDriveLeftSpeed, TimeDriveRightSpeed),
     new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2) )));
 
     autonSelector.addOption("Rotate Drive Command",
