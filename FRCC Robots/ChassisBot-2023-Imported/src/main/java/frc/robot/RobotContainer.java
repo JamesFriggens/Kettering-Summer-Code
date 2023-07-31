@@ -63,7 +63,7 @@ public class RobotContainer {
 
     autonSelector.addOption("Timed Drive Command",
     new SequentialCommandGroup(
-    new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+    new TimeDriveCommand(m_driveSubsystem, 1, TimeDriveLeftSpeed, TimeDriveRightSpeed),
     new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2) )));
 
     autonSelector.addOption("Rotate Drive Command",
@@ -71,10 +71,34 @@ public class RobotContainer {
     new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
     new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
     
-    new TimeDriveCommand(m_driveSubsystem, 2, 0.25, -0.25),
+    new TimeDriveCommand(m_driveSubsystem, 1, 0.5, -.5),
 
-    new TimeDriveCommand(m_driveSubsystem, 1.75, -TimeDriveLeftSpeed, -TimeDriveRightSpeed),
-    new TimeDriveCommand(m_driveSubsystem, .1, (TimeDriveLeftSpeed/2), (TimeDriveLeftSpeed/2))));
+    new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+    new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2))));
+
+    autonSelector.addOption("Timed Square Command", new SequentialCommandGroup(
+      new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+      new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
+      
+      new TimeDriveCommand(m_driveSubsystem, 0.5, 0.5, -.5),
+  
+      new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+      new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
+      
+      new TimeDriveCommand(m_driveSubsystem, 0.5, 0.5, -.5),
+  
+      new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+      new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
+
+      new TimeDriveCommand(m_driveSubsystem, 0.5, 0.5, -.5),
+  
+      new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+      new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
+
+      new TimeDriveCommand(m_driveSubsystem, 0.5, 0.5, -.5),
+  
+      new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+      new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2))));
 
     SmartDashboard.putData("Auton Selector", autonSelector);
 
