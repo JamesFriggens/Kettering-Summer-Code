@@ -2,4 +2,4 @@
  - Summer Camp bot code is in the "Summer Camp Bots" folder
  - FRCC Bots (Cobra, 2020Ri3D, 42) are in the "FRCC Robots" folder
 
-https://prod.liveshare.vsengsaas.visualstudio.com/join?73BE313DDDD1659195EFB277A7E14C427775
+https://prod.liveshare.vsengsaas.visualstudio.com/join?070ED9D9F57A11BA7C8E6B7EAAC11E3575DF
