@@ -15,6 +15,9 @@ import frc.robot.Constants.AvalButtons;
 import frc.robot.Constants.AvalDriveModes;
 import frc.robot.commands.AuxCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commandgroups.DriveAndStopCommand;
+import frc.robot.commandgroups.NSidesCommand;
+import frc.robot.commandgroups.RotateDriveCommand;
 import frc.robot.subsystems.AuxSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.TimeDriveCommand;
-
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -61,45 +63,47 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    autonSelector.addOption("Timed Drive Command",
-    new SequentialCommandGroup(
-    new TimeDriveCommand(m_driveSubsystem, 3, TimeDriveLeftSpeed, TimeDriveRightSpeed),
-    new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2) )));
+    autonSelector.addOption("Timed Drive Command", new DriveAndStopCommand(m_driveSubsystem, TimeDriveLeftSpeed, TimeDriveRightSpeed));
+    // new SequentialCommandGroup(
+    // new TimeDriveCommand(m_driveSubsystem, 3, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+    // new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2) )));
 
-    autonSelector.addOption("Rotate Drive Command",
-    new SequentialCommandGroup(
-    new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
-    new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
+    autonSelector.addOption("Rotate Drive Command", new RotateDriveCommand(m_driveSubsystem, TimeDriveLeftSpeed, TimeDriveRightSpeed));
+    // new SequentialCommandGroup(
+    // new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+    // new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
     
-    new TimeDriveCommand(m_driveSubsystem, 1, 0.5, -.5),
+    // new TimeDriveCommand(m_driveSubsystem, 1, 0.5, -.5),
 
-    new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
-    new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2))));
+    // new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+    // new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2))));
 
-    autonSelector.addOption("Timed Square Command", new SequentialCommandGroup(
-      new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
-      new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
+    // autonSelector.addOption("Timed Square Command", new SequentialCommandGroup(
+    //   new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+    //   new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
       
-      new TimeDriveCommand(m_driveSubsystem, 0.5, 0.5, -.5),
+    //   new TimeDriveCommand(m_driveSubsystem, 0.5, 0.5, -.5),
   
-      new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
-      new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
+    //   new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+    //   new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
       
-      new TimeDriveCommand(m_driveSubsystem, 0.5, 0.5, -.5),
+    //   new TimeDriveCommand(m_driveSubsystem, 0.5, 0.5, -.5),
   
-      new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
-      new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
+    //   new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+    //   new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
 
-      new TimeDriveCommand(m_driveSubsystem, 0.5, 0.5, -.5),
+    //   new TimeDriveCommand(m_driveSubsystem, 0.5, 0.5, -.5),
   
-      new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
-      new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
+    //   new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+    //   new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),
 
-      new TimeDriveCommand(m_driveSubsystem, 0.5, 0.5, -.5),
+    //   new TimeDriveCommand(m_driveSubsystem, 0.5, 0.5, -.5),
   
-      new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
-      new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2))));
+    //   new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
+    //   new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2))));
 
+    autonSelector.addOption("Universal Polygon Command", new NSidesCommand(m_driveSubsystem, 4));
+    
     SmartDashboard.putData("Auton Selector", autonSelector);
 
 
