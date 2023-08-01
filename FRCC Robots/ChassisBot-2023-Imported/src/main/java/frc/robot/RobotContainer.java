@@ -1,7 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -15,6 +14,7 @@ import frc.robot.Constants.AvalButtons;
 import frc.robot.Constants.AvalDriveModes;
 import frc.robot.commands.AuxCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commandgroups.AccurateTurn;
 import frc.robot.commandgroups.DriveAndStopCommand;
 import frc.robot.commandgroups.NSidesCommand;
 import frc.robot.commandgroups.RotateDriveCommand;
@@ -22,10 +22,12 @@ import frc.robot.subsystems.AuxSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.TimeDriveCommand;
+import frc.robot.commands.TurnToDegree;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -33,6 +35,11 @@ import frc.robot.commands.TimeDriveCommand;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
+  // gyro
+  public static ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+
+
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   private final AuxSubsystem m_aux1 = new AuxSubsystem(4);
@@ -62,6 +69,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    gyro.calibrate();
 
     autonSelector.addOption("Timed Drive Command", new DriveAndStopCommand(m_driveSubsystem, TimeDriveLeftSpeed, TimeDriveRightSpeed));
     // new SequentialCommandGroup(
@@ -103,8 +112,11 @@ public class RobotContainer {
     //   new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2))));
 
     autonSelector.addOption("Universal Polygon Command", new NSidesCommand(m_driveSubsystem, 4));
-    
+
+    autonSelector.addOption("turn to 90 degrees", new TurnToDegree(m_driveSubsystem, gyro, 90, 0.4));
+    autonSelector.addOption("accurate turn", new AccurateTurn(m_driveSubsystem, gyro, 90, 0.5));
     SmartDashboard.putData("Auton Selector", autonSelector);
+    
 
 
     // Configure the button bindings
