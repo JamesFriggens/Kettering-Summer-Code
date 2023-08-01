@@ -12,12 +12,14 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants.AvalButtons;
 import frc.robot.Constants.AvalDriveModes;
+import frc.robot.commands.AccurateDriveCommand;
 import frc.robot.commands.AuxCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commandgroups.AccurateTurn;
 import frc.robot.commandgroups.DriveAndStopCommand;
 import frc.robot.commandgroups.NSidesCommand;
 import frc.robot.commandgroups.RotateDriveCommand;
+import frc.robot.commandgroups.RotateDriveGyroCommand;
 import frc.robot.subsystems.AuxSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -73,11 +75,13 @@ public class RobotContainer {
     gyro.calibrate();
 
     autonSelector.addOption("Timed Drive Command", new DriveAndStopCommand(m_driveSubsystem, TimeDriveLeftSpeed, TimeDriveRightSpeed));
+    autonSelector.addOption("gyro assisted timed drive", new AccurateDriveCommand(m_driveSubsystem, gyro, 4, 0.5, 0.5));
     // new SequentialCommandGroup(
     // new TimeDriveCommand(m_driveSubsystem, 3, TimeDriveLeftSpeed, TimeDriveRightSpeed),
     // new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2) )));
 
     autonSelector.addOption("Rotate Drive Command", new RotateDriveCommand(m_driveSubsystem, TimeDriveLeftSpeed, TimeDriveRightSpeed));
+    autonSelector.addOption("Drive Rotate Drive with gyro", new RotateDriveGyroCommand(m_driveSubsystem, gyro));
     // new SequentialCommandGroup(
     // new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
     // new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2)),

@@ -8,11 +8,9 @@ import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
 public class AccurateTurn extends SequentialCommandGroup{
-    
-    public ADXRS450_Gyro gyro;
-    
+        
     public AccurateTurn(DriveSubsystem driveSubsystem, ADXRS450_Gyro gyro, double turnDegrees, double speed){
-        this.gyro = gyro;
+        
         addCommands(
             new TurnToDegree(driveSubsystem, gyro, turnDegrees, speed),
             new TimeDriveCommand(driveSubsystem, 0.1, -speed, speed)
