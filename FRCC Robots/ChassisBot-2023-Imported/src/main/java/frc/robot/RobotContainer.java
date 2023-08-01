@@ -14,6 +14,7 @@ import frc.robot.Constants.AvalButtons;
 import frc.robot.Constants.AvalDriveModes;
 import frc.robot.commands.AccurateDriveCommand;
 import frc.robot.commands.AuxCommand;
+import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commandgroups.AccurateTurn;
 import frc.robot.commandgroups.DriveAndStopCommand;
@@ -73,6 +74,8 @@ public class RobotContainer {
   public RobotContainer() {
 
     gyro.calibrate();
+
+    autonSelector.addOption("balance", new BalanceCommand(m_driveSubsystem, gyro));
 
     autonSelector.addOption("Timed Drive Command", new DriveAndStopCommand(m_driveSubsystem, TimeDriveLeftSpeed, TimeDriveRightSpeed));
     autonSelector.addOption("gyro assisted timed drive", new AccurateDriveCommand(m_driveSubsystem, gyro, 4, 0.5, 0.5));
