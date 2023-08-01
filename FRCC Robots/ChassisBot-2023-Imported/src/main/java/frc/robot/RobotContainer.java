@@ -111,7 +111,7 @@ public class RobotContainer {
     //   new TimeDriveCommand(m_driveSubsystem, 1.75, TimeDriveLeftSpeed, TimeDriveRightSpeed),
     //   new TimeDriveCommand(m_driveSubsystem, .1, -(TimeDriveLeftSpeed/2), -(TimeDriveLeftSpeed/2))));
 
-    autonSelector.addOption("Universal Polygon Command", new NSidesCommand(m_driveSubsystem, gyro, 4));
+    autonSelector.addOption("Universal Polygon Command", new NSidesCommand(m_driveSubsystem, gyro, 7));
 
     autonSelector.addOption("turn to 90 degrees", new TurnToDegree(m_driveSubsystem, gyro, 90, 0.4));
     autonSelector.addOption("accurate turn", new AccurateTurn(m_driveSubsystem, gyro, 90, 0.5));

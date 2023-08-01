@@ -27,9 +27,9 @@ public class NSidesCommand extends SequentialCommandGroup {
     addCommands(
             new TimeDriveCommand(subsystem, 0.75, 0.5, 0.5),
             new TimeDriveCommand(subsystem, .1, -.25, -.25),
-            new WaitCommand(1),
-            new AccurateTurn(subsystem, gyro, (360/sides), .3),
-            new WaitCommand(1)
+            new WaitCommand(0.2),
+            new AccurateTurn(subsystem, gyro, (360/sides), .35),
+            new WaitCommand(0.2)
             );
     }
 }
