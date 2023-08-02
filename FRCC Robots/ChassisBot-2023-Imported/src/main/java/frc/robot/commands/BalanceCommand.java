@@ -3,33 +3,36 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.math.controller.PIDController;
 
 public class BalanceCommand extends CommandBase{
 
-    private boolean balance = false;
+    private PIDController pidLoop = new PIDController(0.008, 0.0007, 0);
+
     DriveSubsystem drivetrain;
     ADXRS450_Gyro gyro;
 
     public BalanceCommand(DriveSubsystem drivetrain, ADXRS450_Gyro gyro){
-
+        
         this.drivetrain = drivetrain;
         this.gyro = gyro;
+        
+        // the "range" we can be in for the loop to quit
+        pidLoop.setTolerance(5);
+        
+        // we want to get to gyro angle 0
+        pidLoop.setSetpoint(0);
+        
     }
 
     @Override
     public void initialize(){
-        balance = false;
         drivetrain.tankDrive(0.5, 0.5);
     }
 
     @Override
     public void execute(){
-
-        System.out.println(balance);
-        if(gyro.getRate() < -100){
-            balance = true;
-        
-        }
+        drivetrain.arcadeDrive(pidLoop.calculate(gyro.getAngle()) , 0);
     }
 
     @Override
@@ -39,9 +42,8 @@ public class BalanceCommand extends CommandBase{
 
     @Override
     public boolean isFinished() {
-        
-        return balance;
-
+        // checking if in the tolerance
+        return pidLoop.atSetpoint();
   }
     
 }
