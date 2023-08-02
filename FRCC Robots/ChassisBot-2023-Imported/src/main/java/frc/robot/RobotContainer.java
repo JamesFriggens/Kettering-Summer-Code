@@ -6,6 +6,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -17,6 +18,7 @@ import frc.robot.commands.AuxCommand;
 import frc.robot.commands.BalanceCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commandgroups.AccurateTurn;
+import frc.robot.commandgroups.BalanceCommandGroup;
 import frc.robot.commandgroups.DriveAndStopCommand;
 import frc.robot.commandgroups.NSidesCommand;
 import frc.robot.commandgroups.RotateDriveCommand;
@@ -25,10 +27,14 @@ import frc.robot.subsystems.AuxSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.TurnToDegree;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+
+//import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import com.kauailabs.navx.frc.AHRS;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -39,7 +45,7 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 public class RobotContainer {
 
   // gyro
-  public static ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+  public static AHRS gyro = new AHRS(Port.kMXP);
 
 
   // The robot's subsystems and commands are defined here...
@@ -52,17 +58,17 @@ public class RobotContainer {
   private final AuxSubsystem m_aux6 = new AuxSubsystem(9);
 
   // Joystick
-  private final Joystick m_stick0 = new Joystick(0);
+  private final CommandJoystick m_stick0 = new CommandJoystick(0);
   private final Joystick m_stick1 = new Joystick(1);
 
   // Default Commands
   private final DriveCommand m_driveCommand = new DriveCommand(m_driveSubsystem, m_stick0, m_stick1);
-  private final AuxCommand m_aux1Command = new AuxCommand(m_aux1, m_stick0, m_stick1, "PWM4");
-  private final AuxCommand m_aux2Command = new AuxCommand(m_aux2, m_stick0, m_stick1, "PWM5");
-  private final AuxCommand m_aux3Command = new AuxCommand(m_aux3, m_stick0, m_stick1, "PWM6");
-  private final AuxCommand m_aux4Command = new AuxCommand(m_aux4, m_stick0, m_stick1, "PWM7");
-  private final AuxCommand m_aux5Command = new AuxCommand(m_aux5, m_stick0, m_stick1, "PWM8");
-  private final AuxCommand m_aux6Command = new AuxCommand(m_aux6, m_stick0, m_stick1, "PWM9");
+  // private final AuxCommand m_aux1Command = new AuxCommand(m_aux1, m_stick0, m_stick1, "PWM4");
+  // private final AuxCommand m_aux2Command = new AuxCommand(m_aux2, m_stick0, m_stick1, "PWM5");
+  // private final AuxCommand m_aux3Command = new AuxCommand(m_aux3, m_stick0, m_stick1, "PWM6");
+  // private final AuxCommand m_aux4Command = new AuxCommand(m_aux4, m_stick0, m_stick1, "PWM7");
+  // private final AuxCommand m_aux5Command = new AuxCommand(m_aux5, m_stick0, m_stick1, "PWM8");
+  // private final AuxCommand m_aux6Command = new AuxCommand(m_aux6, m_stick0, m_stick1, "PWM9");
 
   private SendableChooser<Command> autonSelector = new SendableChooser<>();
 
@@ -74,7 +80,7 @@ public class RobotContainer {
 
     gyro.calibrate();
 
-    autonSelector.addOption("balance", new BalanceCommand(m_driveSubsystem, gyro));
+    autonSelector.addOption("balance", new BalanceCommandGroup(m_driveSubsystem, gyro));
 
     autonSelector.addOption("Timed Drive Command", new DriveAndStopCommand(m_driveSubsystem, TimeDriveLeftSpeed, TimeDriveRightSpeed));
     autonSelector.addOption("gyro assisted timed drive", new AccurateDriveCommand(m_driveSubsystem, gyro, 4, 0.5, 0.5));
@@ -132,19 +138,19 @@ public class RobotContainer {
     setDefaultCommands();
 
     // Setup shuffleboard "Main Dashboard"
-    setupShuffleboardDashboard();
+    // setupShuffleboardDashboard();
   }
 
   // Set Subsystem Default Commands
   public void setDefaultCommands() {
     m_driveSubsystem.setDefaultCommand(m_driveCommand);
 
-    m_aux1.setDefaultCommand(m_aux1Command);
-    m_aux2.setDefaultCommand(m_aux2Command);
-    m_aux3.setDefaultCommand(m_aux3Command);
-    m_aux4.setDefaultCommand(m_aux4Command);
-    m_aux5.setDefaultCommand(m_aux5Command);
-    m_aux6.setDefaultCommand(m_aux6Command);
+    // m_aux1.setDefaultCommand(m_aux1Command);
+    // m_aux2.setDefaultCommand(m_aux2Command);
+    // m_aux3.setDefaultCommand(m_aux3Command);
+    // m_aux4.setDefaultCommand(m_aux4Command);
+    // m_aux5.setDefaultCommand(m_aux5Command);
+    // m_aux6.setDefaultCommand(m_aux6Command);
   }
 
   /**
@@ -154,118 +160,119 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
+    m_stick0.button(1).whileTrue(new BalanceCommand(m_driveSubsystem, gyro));
+    // JoystickButton aButton = (JoystickButton) new JoystickButton(m_stick0, 0).whileTrue(new BalanceCommand(m_driveSubsystem, gyro));
   }
 
-  private void setupShuffleboardDashboard() {
-    ShuffleboardTab primaryTab = Shuffleboard.getTab("Main Dashboard");
+  // private void setupShuffleboardDashboard() {
+  //   ShuffleboardTab primaryTab = Shuffleboard.getTab("Main Dashboard");
 
-    // Preconfigured bots
-    ShuffleboardLayout preconfBots = primaryTab.getLayout("Preconfigured Bots", BuiltInLayouts.kList)
-    .withSize(2, 4)
-    .withPosition(0, 0);
-    // .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+  //   // Preconfigured bots
+  //   ShuffleboardLayout preconfBots = primaryTab.getLayout("Preconfigured Bots", BuiltInLayouts.kList)
+  //   .withSize(2, 4)
+  //   .withPosition(0, 0);
+  //   // .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
 
-    preconfBots.add("Seperated Aux Motors |A-Y, Triggers|", new InstantCommand(() -> {
-      m_aux1Command.setButtons(AvalButtons.A_Y);
-      m_aux2Command.setButtons(AvalButtons.Triggers);
-      m_aux1Command.setInverted(false);
-      m_aux2Command.setInverted(false);
+  //   // preconfBots.add("Seperated Aux Motors |A-Y, Triggers|", new InstantCommand(() -> {
+  //     // m_aux1Command.setButtons(AvalButtons.A_Y);
+  //     // m_aux2Command.setButtons(AvalButtons.Triggers);
+  //     // m_aux1Command.setInverted(false);
+  //     // m_aux2Command.setInverted(false);
 
-    }));
+  //   // }));
 
-    preconfBots.add("Linked Inline Aux Motors |Triggers|", new InstantCommand(() -> {
-      m_aux1Command.setButtons(AvalButtons.Triggers);
-      m_aux2Command.setButtons(AvalButtons.Triggers);
-      m_aux1Command.setInverted(false);
-      m_aux2Command.setInverted(false);
-    }));
+  //   // preconfBots.add("Linked Inline Aux Motors |Triggers|", new InstantCommand(() -> {
+  //     // m_aux1Command.setButtons(AvalButtons.Triggers);
+  //     // m_aux2Command.setButtons(AvalButtons.Triggers);
+  //     // m_aux1Command.setInverted(false);
+  //     // m_aux2Command.setInverted(false);
+  //   // }));
 
-    preconfBots.add("Linked Opposing Aux Motors |Triggers|", new InstantCommand(() -> {
-      m_aux1Command.setButtons(AvalButtons.Triggers);
-      m_aux2Command.setButtons(AvalButtons.Triggers);
-      m_aux1Command.setInverted(false);
-      m_aux2Command.setInverted(true);
-    }));
+  //   // preconfBots.add("Linked Opposing Aux Motors |Triggers|", new InstantCommand(() -> {
+  //     // m_aux1Command.setButtons(AvalButtons.Triggers);
+  //     // m_aux2Command.setButtons(AvalButtons.Triggers);
+  //     // m_aux1Command.setInverted(false);
+  //     // m_aux2Command.setInverted(true);
+  //   // }));
 
 
-    // BYOB (Build your own bot)
-    ShuffleboardLayout preconfDriveModes = primaryTab.getLayout("Quick Drive Modes", BuiltInLayouts.kList)
-    .withSize(2, 4)
-    .withPosition(2, 0);
-    // .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+  //   // BYOB (Build your own bot)
+  //   ShuffleboardLayout preconfDriveModes = primaryTab.getLayout("Quick Drive Modes", BuiltInLayouts.kList)
+  //   .withSize(2, 4)
+  //   .withPosition(2, 0);
+  //   // .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
 
-    preconfDriveModes.add("Arcade", new InstantCommand(() -> {
-      m_driveCommand.setDriveMode(AvalDriveModes.Arcade);
-    }));
+  //   preconfDriveModes.add("Arcade", new InstantCommand(() -> {
+  //     m_driveCommand.setDriveMode(AvalDriveModes.Arcade);
+  //   }));
 
-    preconfDriveModes.add("Tank", new InstantCommand(() -> {
-      m_driveCommand.setDriveMode(AvalDriveModes.Tank);
-    }));
+  //   preconfDriveModes.add("Tank", new InstantCommand(() -> {
+  //     m_driveCommand.setDriveMode(AvalDriveModes.Tank);
+  //   }));
 
-    preconfDriveModes.add("Swap Front-Back", new InstantCommand(() -> {
-      m_driveCommand.swapInverted();
-    }));    
+  //   preconfDriveModes.add("Swap Front-Back", new InstantCommand(() -> {
+  //     m_driveCommand.swapInverted();
+  //   }));    
 
-    ShuffleboardLayout preconfIntakeModes = primaryTab.getLayout("Preconfigured Intakes |A-Y|", BuiltInLayouts.kList)
-    .withSize(2, 4)
-    .withPosition(4, 0);
-    // .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+  //   ShuffleboardLayout preconfIntakeModes = primaryTab.getLayout("Preconfigured Intakes |A-Y|", BuiltInLayouts.kList)
+  //   .withSize(2, 4)
+  //   .withPosition(4, 0);
+  //   // .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
 
-    preconfIntakeModes.add("Single Motor |PWM 4|", new InstantCommand(() -> {
-      m_aux1Command.setButtons(AvalButtons.A_Y);
-      m_aux1Command.setInverted(false);
-    }));
+  //   preconfIntakeModes.add("Single Motor |PWM 4|", new InstantCommand(() -> {
+  //     m_aux1Command.setButtons(AvalButtons.A_Y);
+  //     m_aux1Command.setInverted(false);
+  //   }));
 
-    preconfIntakeModes.add("Dual Opposing Motors |PWM 4-5|", new InstantCommand(() -> {
-      m_aux1Command.setButtons(AvalButtons.A_Y);
-      m_aux2Command.setButtons(AvalButtons.A_Y);
-      m_aux1Command.setInverted(false);
-      m_aux2Command.setInverted(true);
-    }));
+  //   preconfIntakeModes.add("Dual Opposing Motors |PWM 4-5|", new InstantCommand(() -> {
+  //     m_aux1Command.setButtons(AvalButtons.A_Y);
+  //     m_aux2Command.setButtons(AvalButtons.A_Y);
+  //     m_aux1Command.setInverted(false);
+  //     m_aux2Command.setInverted(true);
+  //   }));
 
-    preconfIntakeModes.add("Dual Inline Motors |PWM 4-5|", new InstantCommand(() -> {
-      m_aux1Command.setButtons(AvalButtons.A_Y);
-      m_aux2Command.setButtons(AvalButtons.A_Y);
-      m_aux1Command.setInverted(false);
-      m_aux2Command.setInverted(false);
-    }));
+  //   preconfIntakeModes.add("Dual Inline Motors |PWM 4-5|", new InstantCommand(() -> {
+  //     m_aux1Command.setButtons(AvalButtons.A_Y);
+  //     m_aux2Command.setButtons(AvalButtons.A_Y);
+  //     m_aux1Command.setInverted(false);
+  //     m_aux2Command.setInverted(false);
+  //   }));
 
-    preconfIntakeModes.add("Reverse Direction", new InstantCommand(() -> {
-      m_aux1Command.swapInverted();
-      m_aux2Command.swapInverted();
-    }));
+  //   preconfIntakeModes.add("Reverse Direction", new InstantCommand(() -> {
+  //     m_aux1Command.swapInverted();
+  //     m_aux2Command.swapInverted();
+  //   }));
 
-    ShuffleboardLayout preconfShooterModes = primaryTab.getLayout("Preconfigured Shooters |Triggers|", BuiltInLayouts.kList)
-    .withSize(2, 4)
-    .withPosition(6, 0);
-    // .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
+  //   ShuffleboardLayout preconfShooterModes = primaryTab.getLayout("Preconfigured Shooters |Triggers|", BuiltInLayouts.kList)
+  //   .withSize(2, 4)
+  //   .withPosition(6, 0);
+  //   // .withProperties(Map.of("Label position", "HIDDEN")); // hide labels for commands
 
-    preconfShooterModes.add("Single Motor |PWM 6|", new InstantCommand(() -> {
-      m_aux3Command.setButtons(AvalButtons.Triggers);
-      m_aux3Command.setInverted(false);
-    }));
+  //   preconfShooterModes.add("Single Motor |PWM 6|", new InstantCommand(() -> {
+  //     m_aux3Command.setButtons(AvalButtons.Triggers);
+  //     m_aux3Command.setInverted(false);
+  //   }));
 
-    preconfShooterModes.add("Dual Opposing Motors |PWM 6-7|", new InstantCommand(() -> {
-      m_aux3Command.setButtons(AvalButtons.Triggers);
-      m_aux4Command.setButtons(AvalButtons.Triggers);
-      m_aux3Command.setInverted(false);
-      m_aux4Command.setInverted(true);
-    }));
+  //   preconfShooterModes.add("Dual Opposing Motors |PWM 6-7|", new InstantCommand(() -> {
+  //     m_aux3Command.setButtons(AvalButtons.Triggers);
+  //     m_aux4Command.setButtons(AvalButtons.Triggers);
+  //     m_aux3Command.setInverted(false);
+  //     m_aux4Command.setInverted(true);
+  //   }));
 
-    preconfShooterModes.add("Dual Inline Motors |PWM 6-7|", new InstantCommand(() -> {
-      m_aux3Command.setButtons(AvalButtons.Triggers);
-      m_aux4Command.setButtons(AvalButtons.Triggers);
-      m_aux3Command.setInverted(false);
-      m_aux4Command.setInverted(false);
-    }));
+  //   preconfShooterModes.add("Dual Inline Motors |PWM 6-7|", new InstantCommand(() -> {
+  //     m_aux3Command.setButtons(AvalButtons.Triggers);
+  //     m_aux4Command.setButtons(AvalButtons.Triggers);
+  //     m_aux3Command.setInverted(false);
+  //     m_aux4Command.setInverted(false);
+  //   }));
 
-    preconfShooterModes.add("Reverse Direction", new InstantCommand(() -> {
-      m_aux3Command.swapInverted();
-      m_aux4Command.swapInverted();
-    }));
+  //   preconfShooterModes.add("Reverse Direction", new InstantCommand(() -> {
+  //     m_aux3Command.swapInverted();
+  //     m_aux4Command.swapInverted();
+  //   }));
     
-  }
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

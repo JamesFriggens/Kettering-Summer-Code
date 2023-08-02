@@ -7,7 +7,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import edu.wpi.first.wpilibj.Timer;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+//import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import com.kauailabs.navx.frc.AHRS;
 
 public class AccurateDriveCommand extends CommandBase {
 
@@ -17,9 +18,9 @@ public class AccurateDriveCommand extends CommandBase {
     private double leftDriveSpeed;
     private double rightDriveSpeed;
 
-    private ADXRS450_Gyro gyro;
+    private AHRS gyro;
 
-    public AccurateDriveCommand(DriveSubsystem subsystem, ADXRS450_Gyro gyro, double driveTime, double leftDriveSpeed, double rightDriveSpeed){
+    public AccurateDriveCommand(DriveSubsystem subsystem, AHRS gyro, double driveTime, double leftDriveSpeed, double rightDriveSpeed){
         
         this.gyro = gyro;
         this.driveTime = driveTime;

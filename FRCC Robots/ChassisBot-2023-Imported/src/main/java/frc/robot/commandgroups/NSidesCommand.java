@@ -5,12 +5,12 @@ import frc.robot.commands.TimeDriveCommand;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-
+//import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import com.kauailabs.navx.frc.AHRS;
 
 public class NSidesCommand extends SequentialCommandGroup {
     
-    public NSidesCommand(DriveSubsystem subsystem, ADXRS450_Gyro gyro, int sides){
+    public NSidesCommand(DriveSubsystem subsystem, AHRS gyro, int sides){
     
     for(int i = 0; i < sides; i++){
     addCommands(

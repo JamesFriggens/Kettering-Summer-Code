@@ -3,16 +3,20 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.controller.PIDController;
 
 public class BalanceCommand extends CommandBase{
 
-    private PIDController pidLoop = new PIDController(0.008, 0.0007, 0);
+    private PIDController pidLoop = new PIDController(0.016, 0.0007, 0);
 
     DriveSubsystem drivetrain;
-    ADXRS450_Gyro gyro;
+    AHRS gyro;
 
-    public BalanceCommand(DriveSubsystem drivetrain, ADXRS450_Gyro gyro){
+    public BalanceCommand(DriveSubsystem drivetrain, AHRS gyro){
         
         this.drivetrain = drivetrain;
         this.gyro = gyro;
@@ -27,12 +31,15 @@ public class BalanceCommand extends CommandBase{
 
     @Override
     public void initialize(){
-        drivetrain.tankDrive(0.5, 0.5);
+        // drivetrain.tankDrive(0.5, 0.5);
     }
 
     @Override
     public void execute(){
-        drivetrain.arcadeDrive(pidLoop.calculate(gyro.getAngle()) , 0);
+
+        SmartDashboard.putNumber("pidLoop calculating value", -pidLoop.calculate(gyro.getPitch()));
+        drivetrain.arcadeDrive(-pidLoop.calculate(gyro.getPitch()) , 0);
+        // drivetrain.arcadeDrive(-pidLoop.calculate(gyro.getPitch()) , -pidLoop.calculate(gyro.getPitch()));
     }
 
     @Override
@@ -43,7 +50,7 @@ public class BalanceCommand extends CommandBase{
     @Override
     public boolean isFinished() {
         // checking if in the tolerance
-        return pidLoop.atSetpoint();
+        return false;
   }
     
 }

@@ -17,12 +17,14 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
 /** An example command that uses an example subsystem. */
 public class DriveCommand extends CommandBase {
 
   private final DriveSubsystem m_subsystem;
-  private final Joystick m_js0, m_js1;
+  private final CommandJoystick m_js0;
+  private final Joystick m_js1;
 
   private SendableChooser<Constants.AvalDriveModes> drivetrainType = new SendableChooser<Constants.AvalDriveModes>();
   private GenericEntry reverseDrivetrain, maxDriveSpeed;
@@ -33,7 +35,7 @@ public class DriveCommand extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveCommand(DriveSubsystem subsystem, Joystick js_0, Joystick js_1) {
+  public DriveCommand(DriveSubsystem subsystem, CommandJoystick js_0, Joystick js_1) {
     // Set class globals
     m_subsystem = subsystem;
     m_js0 = js_0;
@@ -92,45 +94,50 @@ public class DriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // Read from shuffleboard
-    Constants.AvalDriveModes dMode = drivetrainType.getSelected();
-    boolean doReverse = reverseDrivetrain.getBoolean(false);
-    double maxSpeed = maxDriveSpeed.getDouble(1);
+    // // Read from shuffleboard
+    // Constants.AvalDriveModes dMode = drivetrainType.getSelected();
+    // boolean doReverse = reverseDrivetrain.getBoolean(false);
+    // double maxSpeed = maxDriveSpeed.getDouble(1);
 
-    // Calculate if we're in teamwork mode
-    boolean teamworkMode = dMode == AvalDriveModes.TeamworkArcade || dMode == AvalDriveModes.TeamworkTank;
+    // // Calculate if we're in teamwork mode
+    // boolean teamworkMode = dMode == AvalDriveModes.TeamworkArcade || dMode == AvalDriveModes.TeamworkTank;
 
-    // If we're in teamwork mode, the second stick is actually JS_1
-    Joystick secondStick = teamworkMode ? m_js1 : m_js0;
+    // // If we're in teamwork mode, the second stick is actually JS_1
+    // // Joystick secondStick = teamworkMode ? m_js1 :  m_js0;
 
-    // If we're not in tank mode
-    if(dMode != AvalDriveModes.Tank && dMode != AvalDriveModes.TeamworkTank) {
-      // Get the axis value that we're supposed to have 
-      int xStick = (dMode == AvalDriveModes.Arcade || dMode == AvalDriveModes.TeamworkArcade) ? Constants.RIGHT_X : 
-        (dMode ==  AvalDriveModes.ArcadeLeft) ? Constants.LEFT_X : Constants.RIGHT_X;
+    // // If we're not in tank mode
+    // if(dMode != AvalDriveModes.Tank && dMode != AvalDriveModes.TeamworkTank) {
+    //   // Get the axis value that we're supposed to have 
+    //   int xStick = (dMode == AvalDriveModes.Arcade || dMode == AvalDriveModes.TeamworkArcade) ? Constants.RIGHT_X : 
+    //     (dMode ==  AvalDriveModes.ArcadeLeft) ? Constants.LEFT_X : Constants.RIGHT_X;
 
-      int yStick = (dMode == Constants.AvalDriveModes.Arcade) ? Constants.LEFT_Y : 
-        (dMode == AvalDriveModes.ArcadeLeft) ? Constants.LEFT_Y : Constants.RIGHT_Y;
+    //   int yStick = (dMode == Constants.AvalDriveModes.Arcade) ? Constants.LEFT_Y : 
+    //     (dMode == AvalDriveModes.ArcadeLeft) ? Constants.LEFT_Y : Constants.RIGHT_Y;
 
-      // Read Axis
-      double xVal = m_js0.getRawAxis(xStick) * maxSpeed;
-      double yVal = secondStick.getRawAxis(yStick) * maxSpeed;
+    //   // Read Axis
+    //   double xVal = m_js0.getRawAxis(xStick) * maxSpeed;
+    //   // double yVal = secondStick.getRawAxis(yStick) * maxSpeed;
+    //   double yVal = m_js0.getRawAxis(4);
 
-      if (!doReverse) {
-        yVal = -yVal;
-      }
+    //   if (!doReverse) {
+    //     yVal = -yVal;
+    //   }
 
-      m_subsystem.arcadeDrive(yVal * .75, xVal * .75);
-    } else {
-      double lStick = m_js0.getRawAxis(Constants.LEFT_Y) * maxSpeed;
-      double rStick = secondStick.getRawAxis(Constants.RIGHT_Y) * maxSpeed;
+    //   m_subsystem.arcadeDrive(yVal * .75, xVal * .75);
+    // } else {
+    //   double lStick = m_js0.getRawAxis(Constants.LEFT_Y) * maxSpeed;
+    //   // double rStick = secondStick.getRawAxis(Constants.RIGHT_Y) * maxSpeed;
+    //   double rStick = 0.0;
 
-      if(doReverse) {
-        m_subsystem.tankDrive(lStick * -.75, rStick * -.75);
-      } else {
-        m_subsystem.tankDrive(rStick * .75, lStick * .75);
-      }
-    }
+    //   if(doReverse) {
+    //     m_subsystem.tankDrive(lStick * -.75, rStick * -.75);
+    //   } else {
+    //     m_subsystem.tankDrive(rStick * .75, lStick * .75);
+    //   }
+    // }
+
+
+    m_subsystem.arcadeDrive(-m_js0.getY(), m_js0.getX());
   }
 
   // Called once the command ends or is interrupted.

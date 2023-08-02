@@ -1,18 +1,19 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class TurnToDegree extends CommandBase{
 
     private DriveSubsystem driveSubsystem;
-    private ADXRS450_Gyro gyro;
+    private AHRS gyro;
     private double turnDegrees;
     private double speed;
 
 
-    public TurnToDegree(DriveSubsystem driveSubsystem, ADXRS450_Gyro gyro, double turnDegrees, double speed){
+    public TurnToDegree(DriveSubsystem driveSubsystem, AHRS gyro, double turnDegrees, double speed){
         addRequirements(driveSubsystem);
 
         this.driveSubsystem = driveSubsystem;

@@ -44,8 +44,13 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
-    SmartDashboard.putNumber("gyro", RobotContainer.gyro.getAngle());
-    SmartDashboard.putNumber("rate of change", RobotContainer.gyro.getRate());
+    SmartDashboard.putNumber("angle", RobotContainer.gyro.getAngle());
+    SmartDashboard.putNumber("roll", RobotContainer.gyro.getRoll());
+    SmartDashboard.putNumber("pitch", RobotContainer.gyro.getPitch());
+    SmartDashboard.putNumber("yaw", RobotContainer.gyro.getYaw());
+
+    //SmartDashboard.putNumber("rate of change", RobotContainer.gyro.getRate());
+
     CommandScheduler.getInstance().run();
   }
 
